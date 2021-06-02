@@ -1,5 +1,5 @@
 # Barbershop: GAN-based Image Compositing using Segmentation Masks
-![teaser](assets/docs/teaser.png)
+![teaser](docs/assets/teaser.png)
 
 > [**Barbershop: GAN-based Image Compositing using Segmentation Masks**](https://zpdesu.github.io/Barbershop/)<br/>
 [Peihao Zhu](https://github.com/ZPdesu),
