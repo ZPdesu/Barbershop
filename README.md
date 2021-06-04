@@ -23,7 +23,6 @@ Official Implementation of Barbershop.
 **2/6/2021** Add project page.
 
 
-
 ## BibTeX
 
 ```
