@@ -27,6 +27,13 @@ Official Implementation of Barbershop.
 ## BibTeX
 
 ```
-
+@misc{zhu2021barbershop,
+      title={Barbershop: GAN-based Image Compositing using Segmentation Masks}, 
+      author={Peihao Zhu and Rameen Abdal and John Femiani and Peter Wonka},
+      year={2021},
+      eprint={2106.01505},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
 ```
 
