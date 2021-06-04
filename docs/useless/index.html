@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Barbershop: GAN-based Image Compositing using Segmentation Masks">
+    <meta name="author" content="Peihao Zhu,
+                                Rameen Abdal,
+                                John Femiani,
+                                Peter Wonka">
+
+    <title>Barbershop: GAN-based Image Compositing using Segmentation Masks</title>
+    <!-- Bootstrap core CSS -->
+    <!--link href="bootstrap.min.css" rel="stylesheet"-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="offcanvas.css" rel="stylesheet">
+    <!--    <link rel="icon" href="img/favicon.gif" type="image/gif">-->
+</head>
+
+<body>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container"></div>
+    <h2>Barbershop: GAN-based Image Compositing using Segmentation Masks</h2>
+    <hr>
+    <p class="authors">
+        <a href="https://github.com/ZPdesu"> Peihao Zhu</a>,
+        <a href="https://github.com/RameenAbdal"> Rameen Abdal</a>,
+        <a href="https://scholar.google.com/citations?user=rS1xJIIAAAAJ&hl=en"> John Femiani</a>,
+        <a href="http://peterwonka.net/"> Peter Wonka</a>
+    </p>
+    <div class="btn-group" role="group" aria-label="Top menu">
+        <a class="btn btn-primary" href="https://arxiv.org/abs/">arXiv</a>
+        <a class="btn btn-primary" href="https://github.com/ZPdesu/Barbershop">Code</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="section">
+        <div class="vcontainer">
+            <iframe class='video' src="https://www.youtube.com/embed/" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+        <hr>
+        <p>
+            Seamlessly blending features from multiple images is extremely challenging because of complex relationships in lighting, geometry, and partial occlusion which cause coupling between different parts of the image. Even though recent work on GANs enables synthesis of realistic hair or faces, it remains difficult to combine them into a single, coherent, and plausible image rather than a disjointed set of image patches. We present a novel solution to image blending, particularly for the problem of hairstyle transfer, based on GAN-inversion. We propose a novel latent space for image blending which is better at preserving detail and encoding spatial information, and propose a new GAN-embedding algorithm which is able to slightly modify images to conform to a common segmentation mask. Our novel representation enables the transfer of the visual properties from multiple reference images including specific details such as moles and wrinkles, and because we do image blending in a latent-space  we are able to synthesize images that are coherent. Our approach avoids blending artifacts present in other approaches and finds a globally consistent image. Our results demonstrate a significant improvement over the current state of the art in a user study, with users preferring our blending solution over 95 percent of the time.
+        </p>
+    </div>
+
+
+    <div class="section">
+        <h2>Overview</h2>
+        <hr>
+        <p>
+          Hairstyle transfer is accomplished by transferring appearance (fine style attributes) and structure (coarse style attributes) from reference images into a composite image. In each inset the appearance, structure, and target masks for a hairstyle image are shown on the left. Inset (a) is a reference image used for the face and and background, and (e) is a reconstruction using our novel <img src="https://render.githubusercontent.com/render/math?math=FS"> latent space. In (b) a  reference image is used to transfer hair structure, but the hair's appearance is from the original face, and (c) transfers both appearance and structure from a hair reference, in (d) and (f) both structure and appearance attributes are transferred, (g) and (h) use a hair shape that is different from any of the reference images.
+        </p>
+        <div class="row align-items-center">
+            <div class="col justify-content-center text-center">
+                <img src="assets/teaser.png" style="width:100%; margin-right:-10px; margin-top:-10px;">
+        </div>
+    </div>
+
+
+    <div class="section">
+        <h2>Bibtex</h2>
+        <hr>
+        <div class="bibtexsection">
+
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- <footer>
+        <p>/</a></p>
+    </footer> -->
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
