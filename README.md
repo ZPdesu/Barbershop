@@ -32,6 +32,7 @@ python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png
 
 
 ## Todo List
+* add a detailed readme
 * update code
 * integrate image encoder
 * add preprocessing step
