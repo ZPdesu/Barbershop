@@ -17,10 +17,24 @@
 ## Description
 Official Implementation of Barbershop.
 
+**KEEP UPDATING !**
+
+```
+python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png
+```
+
 
 ## Updates
 
+**18/12/2021** Add a rough version of the project.
 **2/6/2021** Add project page.
+
+
+## Todo List
+* update code
+* integrate image encoder
+* add preprocessing step
+* ...
 
 
 ## BibTeX
