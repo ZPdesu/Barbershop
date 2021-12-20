@@ -18,7 +18,8 @@ def main(args):
     ii2s = Embedding(args)
 
     ##### Option 1: input folder
-    # ii2s.invert_images_in_W_space()
+    # ii2s.invert_images_in_W()
+    # ii2s.invert_images_in_FS()
 
     ##### Option 2: image path
     # ii2s.invert_images_in_W('input/face/28.png')
@@ -39,9 +40,9 @@ def main(args):
     ii2s.invert_images_in_FS([*im_set])
 
     align = Alignment(args)
-    align.align_images(im_path1, im_path2, align_more_region=True)
+    align.align_images(im_path1, im_path2, align_more_region=False)
     if im_path2 != im_path3:
-        align.align_images(im_path1, im_path3, align_more_region=True, save_intermediate=False)
+        align.align_images(im_path1, im_path3, align_more_region=False, save_intermediate=False)
 
     blend = Blending(args)
     blend.blend_images(im_path1, im_path2, im_path3)
