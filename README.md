@@ -18,12 +18,12 @@
 Official Implementation of Barbershop. **KEEP UPDATING !**
 
 
-Produce realistic results:
+Mode1: Produce realistic results:
 ```
 python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign realistic
 ```
 
-Produce results faithful to the masks:
+Mode2: Produce results faithful to the masks:
 ```
 python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fidelity
 ```
