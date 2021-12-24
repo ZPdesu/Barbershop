@@ -67,7 +67,7 @@ class Blending(nn.Module):
         self.loss_builder = BlendLossBuilder(self.opts)
 
 
-    def blend_images(self, img_path1, img_path2, img_path3):
+    def blend_images(self, img_path1, img_path2, img_path3, sign='realistic'):
 
         device = self.opts.device
         output_dir = self.opts.output_dir
@@ -83,7 +83,7 @@ class Blending(nn.Module):
         HM_3D, HM_3E = cuda_unsqueeze(dilate_erosion_mask_path(img_path3, self.seg), device)
 
         opt_blend, interpolation_latent = self.setup_blend_optimizer()
-        latent_1, latent_F_mixed = load_FS_latent(os.path.join(output_dir, 'Align',
+        latent_1, latent_F_mixed = load_FS_latent(os.path.join(output_dir, 'Align_{}'.format(sign),
                                             '{}_{}.npz'.format(im_name_1, im_name_3)),device)
         latent_3, _ = load_FS_latent(os.path.join(output_dir, 'FS',
                                             '{}.npz'.format(im_name_3)), device)
@@ -130,22 +130,22 @@ class Blending(nn.Module):
             opt_blend.step()
 
         ############## Load F code from  '{}_{}.npz'.format(im_name_1, im_name_2)
-        _, latent_F_mixed = load_FS_latent(os.path.join(output_dir, 'Align',
+        _, latent_F_mixed = load_FS_latent(os.path.join(output_dir, 'Align_{}'.format(sign),
                                                         '{}_{}.npz'.format(im_name_1, im_name_2)), device)
         I_G, _ = self.net.generator([latent_mixed], input_is_latent=True, return_latents=False, start_layer=4,
                            end_layer=8, layer_in=latent_F_mixed)
 
-        self.save_blend_results(im_name_1, im_name_2, im_name_3, I_G, latent_mixed, latent_F_mixed)
+        self.save_blend_results(im_name_1, im_name_2, im_name_3, sign, I_G, latent_mixed, latent_F_mixed)
 
-    def save_blend_results(self, im_name_1, im_name_2, im_name_3, gen_im, latent_in, latent_F):
+    def save_blend_results(self, im_name_1, im_name_2, im_name_3, sign,  gen_im, latent_in, latent_F):
         save_im = toPIL(((gen_im[0] + 1) / 2).detach().cpu().clamp(0, 1))
 
-        save_dir = os.path.join(self.opts.output_dir, 'Blend')
+        save_dir = os.path.join(self.opts.output_dir, 'Blend_{}'.format(sign))
         os.makedirs(save_dir, exist_ok=True)
 
         latent_path = os.path.join(save_dir, '{}_{}_{}.npz'.format(im_name_1, im_name_2, im_name_3))
         image_path = os.path.join(save_dir, '{}_{}_{}.png'.format(im_name_1, im_name_2, im_name_3))
-        output_image_path = os.path.join(self.opts.output_dir, '{}_{}_{}.png'.format(im_name_1, im_name_2, im_name_3))
+        output_image_path = os.path.join(self.opts.output_dir, '{}_{}_{}_{}.png'.format(im_name_1, im_name_2, im_name_3, sign))
 
         save_im.save(image_path)
         save_im.save(output_image_path)

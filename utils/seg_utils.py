@@ -35,9 +35,9 @@ def vis_seg(pred):
     return rgb
 
 
-def save_vis_mask(img_path1, img_path2, output_dir, mask):
+def save_vis_mask(img_path1, img_path2, sign, output_dir, mask):
     im_name_1 = os.path.splitext(os.path.basename(img_path1))[0]
     im_name_2 = os.path.splitext(os.path.basename(img_path2))[0]
-    vis_path = os.path.join(output_dir, 'vis_mask_{}_{}.png'.format(im_name_1, im_name_2))
+    vis_path = os.path.join(output_dir, 'vis_mask_{}_{}_{}.png'.format(im_name_1, im_name_2, sign))
     vis_mask = vis_seg(mask)
     PIL.Image.fromarray(vis_mask).save(vis_path)

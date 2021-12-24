@@ -16,15 +16,15 @@ from models.Blending import Blending
 
 def main(args):
     ii2s = Embedding(args)
+    #
+    # ##### Option 1: input folder
+    # # ii2s.invert_images_in_W()
+    # # ii2s.invert_images_in_FS()
 
-    ##### Option 1: input folder
-    # ii2s.invert_images_in_W()
-    # ii2s.invert_images_in_FS()
-
-    ##### Option 2: image path
-    # ii2s.invert_images_in_W('input/face/28.png')
-    # ii2s.invert_images_in_FS('input/face/28.png')
-
+    # ##### Option 2: image path
+    # # ii2s.invert_images_in_W('input/face/28.png')
+    # # ii2s.invert_images_in_FS('input/face/28.png')
+    #
     ##### Option 3: image path list
 
     # im_path1 = 'input/face/90.png'
@@ -40,12 +40,13 @@ def main(args):
     ii2s.invert_images_in_FS([*im_set])
 
     align = Alignment(args)
-    align.align_images(im_path1, im_path2, align_more_region=False)
+    align.align_images(im_path1, im_path2, sign=args.sign, align_more_region=False)
     if im_path2 != im_path3:
-        align.align_images(im_path1, im_path3, align_more_region=False, save_intermediate=False)
+        align.align_images(im_path1, im_path3, sign=args.sign, align_more_region=False, save_intermediate=False)
 
     blend = Blending(args)
-    blend.blend_images(im_path1, im_path2, im_path3)
+    blend.blend_images(im_path1, im_path2, im_path3, sign=args.sign)
+
 
 
 
@@ -53,7 +54,7 @@ def main(args):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='II2S')
+    parser = argparse.ArgumentParser(description='Barbershop')
 
     # I/O arguments
     parser.add_argument('--input_dir', type=str, default='input/face',
@@ -63,6 +64,8 @@ if __name__ == "__main__":
     parser.add_argument('--im_path1', type=str, default='90.png', help='Identity image')
     parser.add_argument('--im_path2', type=str, default='15.png', help='Structure image')
     parser.add_argument('--im_path3', type=str, default='117.png', help='Appearance image')
+    parser.add_argument('--sign', type=str, default='realistic', help='realistic or fidelity results')
+
 
     # StyleGAN2 setting
     parser.add_argument('--size', type=int, default=1024)
