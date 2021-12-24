@@ -21,18 +21,15 @@ Official Implementation of Barbershop.
 <span style="color:red">**KEEP UPDATING !**</span>
 
 
-Option1: Produce realistic results:
+Produce realistic results:
 ```
 python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign realistic
 ```
 
-Option2: Produce results faithful to the masks:
+Produce results faithful to the masks:
 ```
 python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fidelity
 ```
-
-
-<style>H4{color:Red;}</style>
 
 
 ## <span style="color:red"> Updates</span>
@@ -45,7 +42,7 @@ python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fid
 
 ## Todo List
 * add a detailed readme
-* update code
+* update mask inpainting code
 * integrate image encoder
 * add preprocessing step
 * ...
