@@ -15,10 +15,7 @@
 
 
 ## Description
-Official Implementation of Barbershop.
-
-
-<span style="color:red">**KEEP UPDATING !**</span>
+Official Implementation of Barbershop. **KEEP UPDATING !**
 
 
 Produce realistic results:
@@ -32,7 +29,7 @@ python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fid
 ```
 
 
-## <span style="color:red"> Updates</span>
+## Updates
 #### 24/12/2021 Important Update: Add improved semantic mask inpainting module. Please git pull the newest version.
 
 **18/12/2021** Add a rough version of the project.
