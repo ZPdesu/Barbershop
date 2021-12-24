@@ -32,10 +32,11 @@ python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fid
 ```
 
 
+<style>H4{color:Red;}</style>
 
 
 ## <span style="color:red"> Updates</span>
-#### <span style="color:red">24/12/2021 Important Update: Add improved semantic mask inpainting module. Please git pull the newest version.</span>
+#### 24/12/2021 Important Update: Add improved semantic mask inpainting module. Please git pull the newest version.
 
 **18/12/2021** Add a rough version of the project.
 
