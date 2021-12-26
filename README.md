@@ -18,12 +18,13 @@
 Official Implementation of Barbershop. **KEEP UPDATING !**
 
 ## Updates
-**27/12/2021** Add dilation and erosion parameters to smooth the boundary.
-#### 24/12/2021 Important Update: Add improved semantic mask inpainting module. Please git pull the newest version.
+`2021/12/27` Add dilation and erosion parameters to smooth the boundary.
 
-**18/12/2021** Add a rough version of the project.
+#### `2021/12/24` Important Update: Add improved semantic mask inpainting module. Please git pull the newest version.
 
-**2/6/2021** Add project page.
+`2021/12/18` Add a rough version of the project.
+
+`2021/6/2` Add project page.
 
 
 ## Installation
