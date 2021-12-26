@@ -24,7 +24,7 @@ Official Implementation of Barbershop. **KEEP UPDATING !**
 
 `2021/12/18` Add a rough version of the project.
 
-`2021/6/2` Add project page.
+`2021/06/02` Add project page.
 
 
 ## Installation
