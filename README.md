@@ -15,7 +15,7 @@
 
 
 ## Description
-Official Implementation of Barbershop. **KEEP UPDATING !**
+Official Implementation of Barbershop. **KEEP UPDATING! Please Git Pull the latest version.**
 
 ## Updates
 `2021/12/27` Add dilation and erosion parameters to smooth the boundary.
