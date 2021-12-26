@@ -40,9 +40,9 @@ def main(args):
     ii2s.invert_images_in_FS([*im_set])
 
     align = Alignment(args)
-    align.align_images(im_path1, im_path2, sign=args.sign, align_more_region=False)
+    align.align_images(im_path1, im_path2, sign=args.sign, align_more_region=False, smooth=args.smooth)
     if im_path2 != im_path3:
-        align.align_images(im_path1, im_path3, sign=args.sign, align_more_region=False, save_intermediate=False)
+        align.align_images(im_path1, im_path3, sign=args.sign, align_more_region=False, smooth=args.smooth, save_intermediate=False)
 
     blend = Blending(args)
     blend.blend_images(im_path1, im_path2, im_path3, sign=args.sign)
@@ -61,11 +61,11 @@ if __name__ == "__main__":
                         help='The directory of the images to be inverted')
     parser.add_argument('--output_dir', type=str, default='output',
                         help='The directory to save the latent codes and inversion images')
-    parser.add_argument('--im_path1', type=str, default='90.png', help='Identity image')
+    parser.add_argument('--im_path1', type=str, default='16.png', help='Identity image')
     parser.add_argument('--im_path2', type=str, default='15.png', help='Structure image')
     parser.add_argument('--im_path3', type=str, default='117.png', help='Appearance image')
     parser.add_argument('--sign', type=str, default='realistic', help='realistic or fidelity results')
-
+    parser.add_argument('--smooth', type=int, default=5, help='dilation and erosion parameter')
 
     # StyleGAN2 setting
     parser.add_argument('--size', type=int, default=1024)

@@ -17,24 +17,47 @@
 ## Description
 Official Implementation of Barbershop. **KEEP UPDATING !**
 
-
-Mode1: Produce realistic results:
-```
-python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign realistic
-```
-
-Mode2: Produce results faithful to the masks:
-```
-python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fidelity
-```
-
-
 ## Updates
+**27/12/2021** Add dilation and erosion parameters to smooth the boundary.
 #### 24/12/2021 Important Update: Add improved semantic mask inpainting module. Please git pull the newest version.
 
 **18/12/2021** Add a rough version of the project.
 
 **2/6/2021** Add project page.
+
+
+## Installation
+- Clone the repository:
+``` 
+git clone https://github.com/ZPdesu/Barbershop.git
+cd Barbershop
+```
+- Dependencies:  
+We recommend running this repository using [Anaconda](https://docs.anaconda.com/anaconda/install/). 
+All dependencies for defining the environment are provided in `environment/environment.yaml`.
+
+
+## Download II2S images
+Please download the [II2S](https://drive.google.com/drive/folders/15jsR9yy_pfDHiS9aE3HcYDgwtBbAneId?usp=sharing) 
+and put them in the `input/face` folder.
+
+
+## Getting Started  
+Preprocess your own images. Please put the raw images in the `unprocessed` folder.
+```
+python align_face.py
+```
+
+Produce realistic results:
+```
+python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign realistic --smooth 5
+```
+
+Produce results faithful to the masks:
+```
+python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fidelity --smooth 5
+```
+
 
 
 ## Todo List
@@ -44,6 +67,8 @@ python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fid
 * add preprocessing step
 * ...
 
+## Acknowledgments
+This code borrows heavily from [II2S](https://github.com/ZPdesu/II2S).
 
 ## BibTeX
 

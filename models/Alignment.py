@@ -17,6 +17,8 @@ import cv2
 from utils.data_utils import load_FS_latent
 from utils.seg_utils import save_vis_mask
 from utils.model_utils import download_weight
+from utils.data_utils import cuda_unsqueeze
+from utils.image_utils import dilate_erosion_mask_tensor
 
 toPIL = torchvision.transforms.ToPILImage()
 
@@ -210,7 +212,13 @@ class Alignment(nn.Module):
         down_seg, _, _ = self.seg(im)
         return down_seg, gen_im
 
-    def align_images(self, img_path1, img_path2, sign='realistic', align_more_region=True,
+
+    def dilate_erosion(self, free_mask, device, dilate_erosion=5):
+        free_mask = F.interpolate(free_mask.cpu(), size=(256, 256), mode='nearest').squeeze()
+        free_mask_D, free_mask_E = cuda_unsqueeze(dilate_erosion_mask_tensor(free_mask, dilate_erosion=dilate_erosion), device)
+        return free_mask_D, free_mask_E
+
+    def align_images(self, img_path1, img_path2, sign='realistic', align_more_region=False, smooth=5,
                      save_intermediate=True):
 
         ################## img_path1: Identity Image
@@ -310,6 +318,11 @@ class Alignment(nn.Module):
         latent_F_out_new = latent_F_out_new.clone().detach()
 
         free_mask = 1 - (1 - hair_mask1.unsqueeze(0)) * (1 - hair_mask_target)
+
+        ##############################
+        free_mask, _ = self.dilate_erosion(free_mask, device, dilate_erosion=smooth)
+        ##############################
+
         free_mask_down_32 = F.interpolate(free_mask.float(), size=(32, 32), mode='bicubic')[0]
         interpolation_low = 1 - free_mask_down_32
 
@@ -319,6 +332,9 @@ class Alignment(nn.Module):
 
         if not align_more_region:
             free_mask = hair_mask_target
+            ##########################
+            _, free_mask = self.dilate_erosion(free_mask, device, dilate_erosion=smooth)
+            ##########################
             free_mask_down_32 = F.interpolate(free_mask.float(), size=(32, 32), mode='bicubic')[0]
             interpolation_low = 1 - free_mask_down_32
 
@@ -326,7 +342,10 @@ class Alignment(nn.Module):
         latent_F_mixed = latent_F_out_new + interpolation_low.unsqueeze(0) * (
                 latent_F_mixed - latent_F_out_new)
 
-        free_mask = F.interpolate((hair_mask2.unsqueeze(0) * free_mask).float(), size=(256, 256), mode='nearest').cuda()
+        free_mask = F.interpolate((hair_mask2.unsqueeze(0) * hair_mask_target).float(), size=(256, 256), mode='nearest').cuda()
+        ##########################
+        _, free_mask = self.dilate_erosion(free_mask, device, dilate_erosion=smooth)
+        ##########################
         free_mask_down_32 = F.interpolate(free_mask.float(), size=(32, 32), mode='bicubic')[0]
         interpolation_low = 1 - free_mask_down_32
 
