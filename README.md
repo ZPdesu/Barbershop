@@ -38,6 +38,7 @@ We recommend running this repository using [Anaconda](https://docs.anaconda.com/
 All dependencies for defining the environment are provided in `environment/environment.yaml`.
 
 Anaconda has precompiled binaries which might fail on some operating systems like Arch linux, for installation using pip
+
 `pip install beautifulsoup4 scikit-image torch torchvision dlib matplotlib gdown ipython opencv-python`
 
 ## Download II2S images
