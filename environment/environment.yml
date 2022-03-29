@@ -206,4 +206,5 @@ dependencies:
     - uritemplate==3.0.1
     - urllib3==1.26.7
     - wrapt==1.13.3
+    - wandb==0.12.11
 prefix: ~/.conda/envs/Barbershop
