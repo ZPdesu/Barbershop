@@ -24,13 +24,11 @@ toPIL = torchvision.transforms.ToPILImage()
 
 class Blending(nn.Module):
 
-    def __init__(self, opts, net=None):
+    def __init__(self, opts, ffhq_checkpoint_file: str, segmentation_checkpoint_file: str, net=None):
         super(Blending, self).__init__()
         self.opts = opts
-        if not net:
-            self.net = Net(self.opts)
-        else:
-            self.net = net
+        self.segmentation_checkpoint_file = segmentation_checkpoint_file
+        self.net = Net(self.opts, checkpoint_file=ffhq_checkpoint_file) if not net else net
 
         self.load_segmentation_network()
         self.load_downsampling()
@@ -47,9 +45,9 @@ class Blending(nn.Module):
         self.seg = BiSeNet(n_classes=16)
         self.seg.to(self.opts.device)
 
-        if not os.path.exists(self.opts.seg_ckpt):
-            download_weight(self.opts.seg_ckpt)
-        self.seg.load_state_dict(torch.load(self.opts.seg_ckpt))
+        if not os.path.exists(self.segmentation_checkpoint_file):
+            download_weight(self.segmentation_checkpoint_file)
+        self.seg.load_state_dict(torch.load(self.segmentation_checkpoint_file))
         for param in self.seg.parameters():
             param.requires_grad = False
         self.seg.eval()

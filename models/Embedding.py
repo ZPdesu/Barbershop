@@ -17,10 +17,10 @@ toPIL = torchvision.transforms.ToPILImage()
 
 class Embedding(nn.Module):
 
-    def __init__(self, opts):
+    def __init__(self, opts, checkpoint_file: str):
         super(Embedding, self).__init__()
         self.opts = opts
-        self.net = Net(self.opts)
+        self.net = Net(self.opts, checkpoint_file=checkpoint_file)
         self.load_downsampling()
         self.setup_embedding_loss_builder()
 
