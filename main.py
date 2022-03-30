@@ -1,7 +1,7 @@
 import os
+import torch
 import wandb
 import argparse
-from typing import Union
 
 from models.Embedding import Embedding
 from models.Alignment import Alignment
@@ -23,7 +23,9 @@ def main(args):
         segmentation_model_artifact_dir = segmentation_model_artifact.download()
         segmentation_model_file = os.path.join(segmentation_model_artifact_dir, "seg.pth")
 
-        ii2s = Embedding(args, checkpoint_file=ffhq_model_file)
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+        ii2s = Embedding(args, checkpoint_file=ffhq_model_file).to(device=device)
 
         im_path1 = os.path.join(images_artifact_dir, args.im_path1)
         im_path2 = os.path.join(images_artifact_dir, args.im_path2)
@@ -33,12 +35,12 @@ def main(args):
         ii2s.invert_images_in_W([*im_set])
         ii2s.invert_images_in_FS([*im_set])
 
-        align = Alignment(args, ffhq_checkpoint_file=ffhq_model_file, segmentation_checkpoint_file=segmentation_model_file)
+        align = Alignment(args, ffhq_checkpoint_file=ffhq_model_file, segmentation_checkpoint_file=segmentation_model_file).to(device=device)
         align.align_images(im_path1, im_path2, sign=args.sign, align_more_region=False, smooth=args.smooth)
         if im_path2 != im_path3:
             align.align_images(im_path1, im_path3, sign=args.sign, align_more_region=False, smooth=args.smooth, save_intermediate=False)
 
-        blend = Blending(args, ffhq_checkpoint_file=ffhq_model_file, segmentation_checkpoint_file=segmentation_model_file)
+        blend = Blending(args, ffhq_checkpoint_file=ffhq_model_file, segmentation_checkpoint_file=segmentation_model_file).to(device=device)
         blend.blend_images(im_path1, im_path2, im_path3, sign=args.sign)
 
 
