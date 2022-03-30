@@ -34,6 +34,7 @@ parser.add_argument("-inter_method", type=str, default="bicubic")
 
 
 args = parser.parse_args()
+print(vars(args))
 
 cache_dir = Path(args.cache_dir)
 cache_dir.mkdir(parents=True, exist_ok=True)

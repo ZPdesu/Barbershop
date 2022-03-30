@@ -17,11 +17,11 @@ from utils.drive import open_url
 from utils.shape_predictor import align_face
 
 
-def apply_align_faces(args):
-    cache_dir = Path(args.cache_dir)
+def apply_align_faces(configs, identity_image):
+    cache_dir = Path(configs.cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    output_dir = Path(args.align_output_dir)
+    output_dir = Path(configs.align_output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print("Downloading Shape Predictor")
@@ -32,24 +32,25 @@ def apply_align_faces(args):
     )
     predictor = dlib.shape_predictor(f)
 
-    for im in Path(args.unprocessed_dir).glob("*.*"):
-        faces = align_face(str(im), predictor)
+    identity_image = Path(identity_image)
 
-        for i, face in enumerate(faces):
-            if args.output_size:
-                factor = 1024 // args.output_size
-                assert args.output_size * factor == 1024
-                face_tensor = torchvision.transforms.ToTensor()(face).unsqueeze(0).cuda()
-                face_tensor_lr = face_tensor[0].cpu().detach().clamp(0, 1)
-                face = torchvision.transforms.ToPILImage()(face_tensor_lr)
-                if factor != 1:
-                    face = face.resize(
-                        (args.output_size, args.output_size), Image.LANCZOS
-                    )
-            if len(faces) > 1:
-                face.save(Path(args.align_output_dir) / (im.stem + f"_{i}.png"))
-            else:
-                face.save(Path(args.align_output_dir) / (im.stem + f".png"))
+    faces = align_face(str(identity_image), predictor)
+
+    for i, face in enumerate(faces):
+        if configs.output_size:
+            factor = 1024 // configs.output_size
+            assert configs.output_size * factor == 1024
+            face_tensor = torchvision.transforms.ToTensor()(face).unsqueeze(0).cuda()
+            face_tensor_lr = face_tensor[0].cpu().detach().clamp(0, 1)
+            face = torchvision.transforms.ToPILImage()(face_tensor_lr)
+            if factor != 1:
+                face = face.resize(
+                    (configs.output_size, configs.output_size), Image.LANCZOS
+                )
+        if len(faces) > 1:
+            face.save(Path(configs.align_output_dir) / (identity_image.stem + f"_{i}.png"))
+        else:
+            face.save(Path(configs.align_output_dir) / (identity_image.stem + f".png"))
 
 
 def main(args):
@@ -78,15 +79,15 @@ def main(args):
             segmentation_model_artifact_dir, "seg.pth"
         )
 
-        apply_align_faces(args)
+        identity_image = os.path.join(images_artifact_dir, args.identity_image)
+        structure_image = os.path.join(images_artifact_dir, args.structure_image)
+        appearance_image = os.path.join(images_artifact_dir, args.appearance_image)
+
+        apply_align_faces(args, identity_image=identity_image)
 
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
         ii2s = Embedding(args, checkpoint_file=ffhq_model_file).to(device=device)
-
-        identity_image = os.path.join(images_artifact_dir, args.identity_image)
-        structure_image = os.path.join(images_artifact_dir, args.structure_image)
-        appearance_image = os.path.join(images_artifact_dir, args.appearance_image)
 
         im_set = {identity_image, structure_image, appearance_image}
         ii2s.invert_images_in_W([*im_set])
@@ -135,7 +136,7 @@ def main(args):
         table = wandb.Table(
             data=table_data,
             columns=[
-                "Realistic/Fidelity"
+                "Realistic/Fidelity",
                 "Identity-Image",
                 "Structure-Image",
                 "Appearance-Image",
