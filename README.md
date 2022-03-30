@@ -50,7 +50,9 @@ Produce results faithful to the masks:
 python main.py --identity_image 90.png --structure_image 15.png --appearance_image 117.png --sign fidelity --smooth 5
 ```
 
-You can also use the [Jupyter Notebook](./inference.ipynb) to producde the results.
+You can also use the [Jupyter Notebook](./inference.ipynb) to producde the results. The results are now logged automatically as a Weights and Biases Table.
+
+![](https://imgur.com/gallery/CPrMZpp)
 
 
 
