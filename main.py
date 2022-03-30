@@ -80,13 +80,13 @@ def main(args):
             identity_image, structure_image, appearance_image, sign=args.sign
         )
 
-        table_data = [
+        table_data = [[
             wandb.Image(np.array(Image.open(identity_image))),
             wandb.Image(np.array(Image.open(structure_image))),
             wandb.Image(np.array(Image.open(appearance_image))),
             wandb.Image(np.array(aligned_image)),
             wandb.Image(np.array(blended_image)),
-        ]
+        ]]
 
         table = wandb.Table(
             data=table_data,
