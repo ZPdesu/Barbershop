@@ -58,7 +58,7 @@ def main(args):
     with wandb.init(
         project=args.wandb_project,
         entity=args.wandb_entity,
-        job_type="test",
+        job_type="predict",
         config=vars(args),
     ):
 
