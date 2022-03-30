@@ -7,8 +7,17 @@ import numpy as np
 import torch
 
 IMG_EXTENSIONS = [
-    '.jpg', '.JPG', '.jpeg', '.JPEG',
-    '.png', '.PNG', '.ppm', '.PPM', '.bmp', '.BMP', '.tiff'
+    ".jpg",
+    ".JPG",
+    ".jpeg",
+    ".JPEG",
+    ".png",
+    ".PNG",
+    ".ppm",
+    ".PPM",
+    ".bmp",
+    ".BMP",
+    ".tiff",
 ]
 
 
@@ -16,10 +25,9 @@ def is_image_file(filename):
     return any(filename.endswith(extension) for extension in IMG_EXTENSIONS)
 
 
-
 def make_dataset(dir):
     images = []
-    assert os.path.isdir(dir), '%s is not a valid directory' % dir
+    assert os.path.isdir(dir), "%s is not a valid directory" % dir
     for root, _, fnames in sorted(os.walk(dir)):
         for fname in fnames:
             if is_image_file(fname):
@@ -28,7 +36,7 @@ def make_dataset(dir):
     return images
 
 
-def cuda_unsqueeze(li_variables=None, device='cuda'):
+def cuda_unsqueeze(li_variables=None, device="cuda"):
 
     if li_variables is None:
         return None
@@ -53,11 +61,9 @@ def convert_npy_code(latent):
     return latent
 
 
-
 def load_FS_latent(latent_path, device):
     dict = np.load(latent_path)
-    latent_in = torch.from_numpy(dict['latent_in']).to(device)
-    latent_F = torch.from_numpy(dict['latent_F']).to(device)
+    latent_in = torch.from_numpy(dict["latent_in"]).to(device)
+    latent_F = torch.from_numpy(dict["latent_F"]).to(device)
 
     return latent_in, latent_F
-

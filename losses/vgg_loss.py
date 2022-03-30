@@ -2,6 +2,7 @@ import torch
 import torchvision
 import torch.nn as nn
 
+
 class VGG19(torch.nn.Module):
     def __init__(self, requires_grad=False):
         super().__init__()
