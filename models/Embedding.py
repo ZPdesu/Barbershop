@@ -55,7 +55,6 @@ class Embedding(nn.Module):
         return optimizer_W, latent
 
 
-
     def setup_FS_optimizer(self, latent_W, F_init):
 
         latent_F = F_init.clone().detach().requires_grad_(True)
@@ -127,8 +126,6 @@ class Embedding(nn.Module):
             self.save_W_results(ref_name, gen_im, latent_in)
 
 
-
-
     def invert_images_in_FS(self, image_path=None):
         self.setup_dataloader(image_path=image_path)
         output_dir = self.opts.output_dir
@@ -166,8 +163,6 @@ class Embedding(nn.Module):
                         .format(loss, loss_dic['l2'], loss_dic['percep'], loss_dic['p-norm'], loss_dic['l_F']))
 
             self.save_FS_results(ref_name, gen_im, latent_in, latent_F)
-
-
 
 
     def cal_loss(self, im_dict, latent_in, latent_F=None, F_init=None):

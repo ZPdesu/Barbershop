@@ -27,21 +27,21 @@ def main(args):
 
         ii2s = Embedding(args, checkpoint_file=ffhq_model_file).to(device=device)
 
-        im_path1 = os.path.join(images_artifact_dir, args.im_path1)
-        im_path2 = os.path.join(images_artifact_dir, args.im_path2)
-        im_path3 = os.path.join(images_artifact_dir, args.im_path3)
+        identity_image = os.path.join(images_artifact_dir, args.identity_image)
+        structure_image = os.path.join(images_artifact_dir, args.structure_image)
+        appearance_image = os.path.join(images_artifact_dir, args.appearance_image)
 
-        im_set = {im_path1, im_path2, im_path3}
+        im_set = {identity_image, structure_image, appearance_image}
         ii2s.invert_images_in_W([*im_set])
         ii2s.invert_images_in_FS([*im_set])
 
         align = Alignment(args, ffhq_checkpoint_file=ffhq_model_file, segmentation_checkpoint_file=segmentation_model_file).to(device=device)
-        align.align_images(im_path1, im_path2, sign=args.sign, align_more_region=False, smooth=args.smooth)
-        if im_path2 != im_path3:
-            align.align_images(im_path1, im_path3, sign=args.sign, align_more_region=False, smooth=args.smooth, save_intermediate=False)
+        align.align_images(identity_image, structure_image, sign=args.sign, align_more_region=False, smooth=args.smooth)
+        if structure_image != appearance_image:
+            align.align_images(identity_image, appearance_image, sign=args.sign, align_more_region=False, smooth=args.smooth, save_intermediate=False)
 
         blend = Blending(args, ffhq_checkpoint_file=ffhq_model_file, segmentation_checkpoint_file=segmentation_model_file).to(device=device)
-        blend.blend_images(im_path1, im_path2, im_path3, sign=args.sign)
+        blend.blend_images(identity_image, structure_image, appearance_image, sign=args.sign)
 
 
 if __name__ == "__main__":
@@ -55,9 +55,9 @@ if __name__ == "__main__":
     parser.add_argument('--ffhq_models_artifact', type=str, default="geekyrakshit/barbershop/ffhq:v0", help='WandB Artifact address for ffhq model')
     parser.add_argument('--segmentation_models_artifact', type=str, default="geekyrakshit/barbershop/segmentation:v0", help='WandB Artifact address for segmentation model')
     parser.add_argument('--output_dir', type=str, default='output', help='The directory to save the latent codes and inversion images')
-    parser.add_argument('--im_path1', type=str, default='16.png', help='Identity image')
-    parser.add_argument('--im_path2', type=str, default='15.png', help='Structure image')
-    parser.add_argument('--im_path3', type=str, default='117.png', help='Appearance image')
+    parser.add_argument('--identity_image', type=str, default='16.png', help='Identity image')
+    parser.add_argument('--structure_image', type=str, default='15.png', help='Structure image')
+    parser.add_argument('--appearance_image', type=str, default='117.png', help='Appearance image')
     parser.add_argument('--sign', type=str, default='realistic', help='realistic or fidelity results')
     parser.add_argument('--smooth', type=int, default=5, help='dilation and erosion parameter')
 
@@ -81,7 +81,6 @@ if __name__ == "__main__":
     parser.add_argument('--verbose', action='store_true', help='Print loss information')
     # parser.add_argument('--seg_ckpt', type=str, default='pretrained_models/seg.pth')
 
-
     # Embedding loss options
     parser.add_argument('--percept_lambda', type=float, default=1.0, help='Perceptual loss multiplier factor')
     parser.add_argument('--l2_lambda', type=float, default=1.0, help='L2 loss multiplier factor')
@@ -90,19 +89,16 @@ if __name__ == "__main__":
     parser.add_argument('--W_steps', type=int, default=1100, help='Number of W space optimization steps')
     parser.add_argument('--FS_steps', type=int, default=250, help='Number of W space optimization steps')
 
-
     # Alignment loss options
     parser.add_argument('--ce_lambda', type=float, default=1.0, help='cross entropy loss multiplier factor')
     parser.add_argument('--style_lambda', type=str, default=4e4, help='style loss multiplier factor')
     parser.add_argument('--align_steps1', type=int, default=140, help='')
     parser.add_argument('--align_steps2', type=int, default=100, help='')
 
-
     # Blend loss options
     parser.add_argument('--face_lambda', type=float, default=1.0, help='')
     parser.add_argument('--hair_lambda', type=str, default=1.0, help='')
     parser.add_argument('--blend_steps', type=int, default=400, help='')
-
 
     args = parser.parse_args()
     main(args)
