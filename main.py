@@ -2,6 +2,8 @@ import os
 import torch
 import wandb
 import argparse
+import numpy as np
+from PIL import Image
 
 from models.Embedding import Embedding
 from models.Alignment import Alignment
@@ -9,9 +11,13 @@ from models.Blending import Blending
 
 
 def main(args):
+    print(vars(args))
     wandb.login()
     with wandb.init(
-        project=args.wandb_project, entity=args.wandb_entity, job_type="test"
+        project=args.wandb_project,
+        entity=args.wandb_entity,
+        job_type="test",
+        config=vars(args),
     ):
 
         images_artifact = wandb.use_artifact(args.images_artifact, type="dataset")
@@ -48,7 +54,7 @@ def main(args):
             ffhq_checkpoint_file=ffhq_model_file,
             segmentation_checkpoint_file=segmentation_model_file,
         ).to(device=device)
-        align.align_images(
+        aligned_image = align.align_images(
             identity_image,
             structure_image,
             sign=args.sign,
@@ -56,7 +62,7 @@ def main(args):
             smooth=args.smooth,
         )
         if structure_image != appearance_image:
-            align.align_images(
+            aligned_image = align.align_images(
                 identity_image,
                 appearance_image,
                 sign=args.sign,
@@ -70,9 +76,29 @@ def main(args):
             ffhq_checkpoint_file=ffhq_model_file,
             segmentation_checkpoint_file=segmentation_model_file,
         ).to(device=device)
-        blend.blend_images(
+        blended_image = blend.blend_images(
             identity_image, structure_image, appearance_image, sign=args.sign
         )
+
+        table_data = [
+            wandb.Image(np.array(Image.open(identity_image))),
+            wandb.Image(np.array(Image.open(structure_image))),
+            wandb.Image(np.array(Image.open(appearance_image))),
+            wandb.Image(np.array(aligned_image)),
+            wandb.Image(np.array(blended_image)),
+        ]
+
+        table = wandb.Table(
+            data=table_data,
+            columns=[
+                "Identity-Image",
+                "Structure-Image",
+                "Appearance-Image",
+                "Aligned-Image",
+                "Blended-Image",
+            ],
+        )
+        wandb.log({"Predictions": table})
 
 
 if __name__ == "__main__":

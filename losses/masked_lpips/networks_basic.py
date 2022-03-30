@@ -48,7 +48,7 @@ class PNetLin(nn.Module):
         spatial=False,
         version="0.1",
         lpips=True,
-        vgg_blocks=[1, 2, 3, 4, 5]
+        vgg_blocks=[1, 2, 3, 4, 5],
     ):
         super(PNetLin, self).__init__()
 
@@ -83,7 +83,7 @@ class PNetLin(nn.Module):
             self.lin3 = NetLinLayer(self.chns[3], use_dropout=use_dropout)
             self.lin4 = NetLinLayer(self.chns[4], use_dropout=use_dropout)
             self.lins = [self.lin0, self.lin1, self.lin2, self.lin3, self.lin4]
-            #self.lins = [self.lin0, self.lin1, self.lin2, self.lin3, self.lin4]
+            # self.lins = [self.lin0, self.lin1, self.lin2, self.lin3, self.lin4]
             if self.pnet_type == "squeeze":  # 7 layers for squeezenet
                 self.lin5 = NetLinLayer(self.chns[5], use_dropout=use_dropout)
                 self.lin6 = NetLinLayer(self.chns[6], use_dropout=use_dropout)
@@ -100,7 +100,7 @@ class PNetLin(nn.Module):
         )
         outs0, outs1 = self.net.forward(in0_input), self.net.forward(in1_input)
         feats0, feats1, diffs = {}, {}, {}
-        
+
         # prepare list of masks at different resolutions
         if mask is not None:
             masks = []
@@ -126,7 +126,7 @@ class PNetLin(nn.Module):
                 util.normalize_tensor(outs1[kk]),
             )
             diffs[kk] = (feats0[kk] - feats1[kk]) ** 2
-        
+
         if self.lpips:
             if self.spatial:
                 res = [
@@ -169,13 +169,13 @@ class PNetLin(nn.Module):
                     spatial_average(diffs[kk].sum(dim=1, keepdim=True), keepdim=True)
                     for kk in range(self.L)
                 ]
-        
-        '''
+
+        """
         val = res[0]
         for l in range(1, self.L):
             val += res[l]
-        '''
-        
+        """
+
         val = 0.0
         for l in range(self.L):
             # l is going to run from 0 to 4
@@ -204,7 +204,7 @@ class ScalingLayer(nn.Module):
 
 
 class NetLinLayer(nn.Module):
-    """ A single linear layer which does a 1x1 conv """
+    """A single linear layer which does a 1x1 conv"""
 
     def __init__(self, chn_in, chn_out=1, use_dropout=False):
         super(NetLinLayer, self).__init__()
@@ -223,7 +223,7 @@ class NetLinLayer(nn.Module):
 
 
 class Dist2LogitLayer(nn.Module):
-    """ takes 2 distances, puts through fc layers, spits out value between [0,1] (if use_sigmoid is True) """
+    """takes 2 distances, puts through fc layers, spits out value between [0,1] (if use_sigmoid is True)"""
 
     def __init__(self, chn_mid=32, use_sigmoid=True):
         super(Dist2LogitLayer, self).__init__()

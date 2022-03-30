@@ -10,26 +10,42 @@ class BicubicDownSample(nn.Module):
         https://clouard.users.greyc.fr/Pantheon/experiments/rescaling/index-en.html#bicubic
         """
         abs_x = torch.abs(x)
-        if abs_x <= 1.:
-            return (a + 2.) * torch.pow(abs_x, 3.) - (a + 3.) * torch.pow(abs_x, 2.) + 1
-        elif 1. < abs_x < 2.:
-            return a * torch.pow(abs_x, 3) - 5. * a * torch.pow(abs_x, 2.) + 8. * a * abs_x - 4. * a
+        if abs_x <= 1.0:
+            return (
+                (a + 2.0) * torch.pow(abs_x, 3.0)
+                - (a + 3.0) * torch.pow(abs_x, 2.0)
+                + 1
+            )
+        elif 1.0 < abs_x < 2.0:
+            return (
+                a * torch.pow(abs_x, 3)
+                - 5.0 * a * torch.pow(abs_x, 2.0)
+                + 8.0 * a * abs_x
+                - 4.0 * a
+            )
         else:
             return 0.0
 
-    def __init__(self, factor=4, cuda=True, padding='reflect'):
+    def __init__(self, factor=4, cuda=True, padding="reflect"):
         super().__init__()
         self.factor = factor
         size = factor * 4
-        k = torch.tensor([self.bicubic_kernel((i - torch.floor(torch.tensor(size / 2)) + 0.5) / factor)
-                          for i in range(size)], dtype=torch.float32)
+        k = torch.tensor(
+            [
+                self.bicubic_kernel(
+                    (i - torch.floor(torch.tensor(size / 2)) + 0.5) / factor
+                )
+                for i in range(size)
+            ],
+            dtype=torch.float32,
+        )
         k = k / torch.sum(k)
         # k = torch.einsum('i,j->ij', (k, k))
         k1 = torch.reshape(k, shape=(1, 1, size, 1))
         self.k1 = torch.cat([k1, k1, k1], dim=0)
         k2 = torch.reshape(k, shape=(1, 1, 1, size))
         self.k2 = torch.cat([k2, k2, k2], dim=0)
-        self.cuda = '.cuda' if cuda else ''
+        self.cuda = ".cuda" if cuda else ""
         self.padding = padding
         for param in self.parameters():
             param.requires_grad = False
@@ -42,8 +58,8 @@ class BicubicDownSample(nn.Module):
 
         pad_along_height = max(filter_height - stride, 0)
         pad_along_width = max(filter_width - stride, 0)
-        filters1 = self.k1.type('torch{}.FloatTensor'.format(self.cuda))
-        filters2 = self.k2.type('torch{}.FloatTensor'.format(self.cuda))
+        filters1 = self.k1.type("torch{}.FloatTensor".format(self.cuda))
+        filters2 = self.k2.type("torch{}.FloatTensor".format(self.cuda))
 
         # compute actual padding values for each side
         pad_top = pad_along_height // 2
@@ -53,23 +69,22 @@ class BicubicDownSample(nn.Module):
 
         # apply mirror padding
         if nhwc:
-            x = torch.transpose(torch.transpose(
-                x, 2, 3), 1, 2)   # NHWC to NCHW
+            x = torch.transpose(torch.transpose(x, 2, 3), 1, 2)  # NHWC to NCHW
 
         # downscaling performed by 1-d convolution
         x = F.pad(x, (0, 0, pad_top, pad_bottom), self.padding)
         x = F.conv2d(input=x, weight=filters1, stride=(stride, 1), groups=3)
         if clip_round:
-            x = torch.clamp(torch.round(x), 0.0, 255.)
+            x = torch.clamp(torch.round(x), 0.0, 255.0)
 
         x = F.pad(x, (pad_left, pad_right, 0, 0), self.padding)
         x = F.conv2d(input=x, weight=filters2, stride=(1, stride), groups=3)
         if clip_round:
-            x = torch.clamp(torch.round(x), 0.0, 255.)
+            x = torch.clamp(torch.round(x), 0.0, 255.0)
 
         if nhwc:
             x = torch.transpose(torch.transpose(x, 1, 3), 1, 2)
         if byte_output:
-            return x.type('torch.ByteTensor'.format(self.cuda))
+            return x.type("torch.ByteTensor".format(self.cuda))
         else:
             return x
