@@ -1,22 +1,64 @@
 import os
-import torch
+import dlib
 import wandb
 import argparse
 import numpy as np
 from PIL import Image
+from pathlib import Path
+
+import torch
+import torchvision
 
 from models.Embedding import Embedding
 from models.Alignment import Alignment
 from models.Blending import Blending
 
+from utils.drive import open_url
+from utils.shape_predictor import align_face
+
+
+def apply_align_faces(configs, identity_image):
+    cache_dir = Path(configs.cache_dir)
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    output_dir = Path(configs.align_output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    print("Downloading Shape Predictor")
+    f = open_url(
+        "https://drive.google.com/uc?id=1huhv8PYpNNKbGCLOaYUjOgR1pY5pmbJx",
+        cache_dir=cache_dir,
+        return_path=True,
+    )
+    predictor = dlib.shape_predictor(f)
+
+    identity_image = Path(identity_image)
+
+    faces = align_face(str(identity_image), predictor)
+
+    for i, face in enumerate(faces):
+        if configs.output_size:
+            factor = 1024 // configs.output_size
+            assert configs.output_size * factor == 1024
+            face_tensor = torchvision.transforms.ToTensor()(face).unsqueeze(0).cuda()
+            face_tensor_lr = face_tensor[0].cpu().detach().clamp(0, 1)
+            face = torchvision.transforms.ToPILImage()(face_tensor_lr)
+            if factor != 1:
+                face = face.resize(
+                    (configs.output_size, configs.output_size), Image.LANCZOS
+                )
+        if len(faces) > 1:
+            face.save(Path(configs.align_output_dir) / (identity_image.stem + f"_{i}.png"))
+        else:
+            face.save(Path(configs.align_output_dir) / (identity_image.stem + f".png"))
+
 
 def main(args):
-    print(vars(args))
     wandb.login()
     with wandb.init(
         project=args.wandb_project,
         entity=args.wandb_entity,
-        job_type="test",
+        job_type="predict",
         config=vars(args),
     ):
 
@@ -37,13 +79,15 @@ def main(args):
             segmentation_model_artifact_dir, "seg.pth"
         )
 
-        device = "cuda:0" if torch.cuda.is_available() else "cpu"
-
-        ii2s = Embedding(args, checkpoint_file=ffhq_model_file).to(device=device)
-
         identity_image = os.path.join(images_artifact_dir, args.identity_image)
         structure_image = os.path.join(images_artifact_dir, args.structure_image)
         appearance_image = os.path.join(images_artifact_dir, args.appearance_image)
+
+        apply_align_faces(args, identity_image=identity_image)
+
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+        ii2s = Embedding(args, checkpoint_file=ffhq_model_file).to(device=device)
 
         im_set = {identity_image, structure_image, appearance_image}
         ii2s.invert_images_in_W([*im_set])
@@ -81,6 +125,7 @@ def main(args):
         )
 
         table_data = [[
+            args.sign,
             wandb.Image(np.array(Image.open(identity_image))),
             wandb.Image(np.array(Image.open(structure_image))),
             wandb.Image(np.array(Image.open(appearance_image))),
@@ -91,6 +136,7 @@ def main(args):
         table = wandb.Table(
             data=table_data,
             columns=[
+                "Realistic/Fidelity",
                 "Identity-Image",
                 "Structure-Image",
                 "Appearance-Image",
@@ -150,9 +196,28 @@ if __name__ == "__main__":
         "--smooth", type=int, default=5, help="dilation and erosion parameter"
     )
 
+    # Align Face Setting
+    parser.add_argument(
+        "--unprocessed_dir",
+        type=str,
+        default="unprocessed",
+        help="directory with unprocessed images",
+    )
+    parser.add_argument(
+        "--align_output_dir", type=str, default="input/face", help="output directory"
+    )
+    parser.add_argument(
+        "--output_size",
+        type=int,
+        default=1024,
+        help="size to downscale the input images to, must be power of 2",
+    )
+    parser.add_argument(
+        "--cache_dir", type=str, default="cache", help="cache directory for model weights"
+    )
+
     # StyleGAN2 setting
     parser.add_argument("--size", type=int, default=1024)
-    # parser.add_argument('--ckpt', type=str, default="pretrained_models/ffhq.pt")
     parser.add_argument("--channel_multiplier", type=int, default=2)
     parser.add_argument("--latent", type=int, default=512)
     parser.add_argument("--n_mlp", type=int, default=8)
