@@ -131,6 +131,9 @@ dmypy.json
 .pyre/
 
 wandb/
+artifacts/
+input/
+output/
 *.lmdb/
 *.pkl
 *.pt

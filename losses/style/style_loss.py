@@ -5,7 +5,11 @@ from torch.nn import functional as F
 import os
 
 from losses.style.custom_loss import custom_loss, prepare_mask
-from losses.style.vgg_activations import VGG16_Activations, VGG19_Activations, Vgg_face_dag
+from losses.style.vgg_activations import (
+    VGG16_Activations,
+    VGG19_Activations,
+    Vgg_face_dag,
+)
 
 
 class StyleLoss(nn.Module):

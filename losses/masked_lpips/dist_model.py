@@ -201,7 +201,7 @@ class DistModel(BaseModel):
         torch.mean(self.loss_total).backward()
 
     def compute_accuracy(self, d0, d1, judge):
-        """ d0, d1 are Variables, judge is a Tensor """
+        """d0, d1 are Variables, judge is a Tensor"""
         d1_lt_d0 = (d1 < d0).cpu().data.numpy().flatten()
         judge_per = judge.cpu().numpy().flatten()
         return d1_lt_d0 * judge_per + (1 - d1_lt_d0) * (1 - judge_per)
