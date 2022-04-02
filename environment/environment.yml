@@ -160,7 +160,7 @@ dependencies:
     - cachetools==4.2.4
     - charset-normalizer==2.0.7
     - click==8.0.3
-    - clip==1.0
+    - git+https://github.com/openai/CLIP.git
     - deprecated==1.2.13
     - dlib==19.22.1
     - et-xmlfile==1.1.0
