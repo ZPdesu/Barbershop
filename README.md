@@ -15,19 +15,12 @@
 
 
 ## Description
-Official Implementation of Barbershop. **KEEP UPDATING! Please Git Pull the latest version.**
 
-## Updates
-`2021/12/27` Add dilation and erosion parameters to smooth the boundary.
+This repository is a fork of the [official implmentation of Barbershop](https://github.com/ZPdesu/Barbershop). This repository build on the official reporsitory to add the following features:
 
-#### `2021/12/24` Important Update: Add semantic mask inpainting module to solve the occlusion problem. Please git pull the latest version.
-
-`2021/12/18` Add a rough version of the project.
-
-`2021/06/02` Add project page.
-
-`2022/03/31` [Weights and Biases](wandb.ai) Integration.
-
+- Combine [`main.py`](https://github.com/ZPdesu/Barbershop/blob/main/main.py) and `align_face.py` into a single command line interface as part of the updated `main.py`.
+- Provide a notebook `inference.ipynb` for performing step-by-step inference and visualization of the result.
+- Add an integration with Weights & Biases, which enables the predictions to be visualized as a W&B Table. The integration works with both the script and the notebook.
 
 ## Installation
 - Clone the repository:
@@ -52,16 +45,7 @@ python main.py --identity_image 90.png --structure_image 15.png --appearance_ima
 
 You can also use the [Jupyter Notebook](./inference.ipynb) to producde the results. The results are now logged automatically as a Weights and Biases Table.
 
-![](https://imgur.com/gallery/CPrMZpp)
-
-
-
-## Todo List
-* add a detailed readme
-* update mask inpainting code
-* integrate image encoder
-* add preprocessing step
-* ...
+![](https://i.imgur.com/subthu8.png)
 
 ## Acknowledgments
 This code borrows heavily from [II2S](https://github.com/ZPdesu/II2S).
