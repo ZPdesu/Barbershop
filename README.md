@@ -18,8 +18,8 @@
 
 This repository is a fork of the [official implmentation of Barbershop](https://github.com/ZPdesu/Barbershop). This repository build on the official reporsitory to add the following features:
 
-- Combine [`main.py`](https://github.com/ZPdesu/Barbershop/blob/main/main.py) and `align_face.py` into a single command line interface as part of the updated `main.py`.
-- Provide a notebook `inference.ipynb` for performing step-by-step inference and visualization of the result.
+- Combine [`main.py`](https://github.com/ZPdesu/Barbershop/blob/main/main.py) and [`align_face.py`](https://github.com/ZPdesu/Barbershop/blob/main/align_face.py) into a single command line interface as part of the updated [`main.py`](https://github.com/soumik12345/Barbershop/blob/main/main.py).
+- Provide a notebook [`inference.ipynb`](https://github.com/soumik12345/Barbershop/blob/main/inference.ipynb) for performing step-by-step inference and visualization of the result.
 - Add an integration with Weights & Biases, which enables the predictions to be visualized as a W&B Table. The integration works with both the script and the notebook.
 
 ## Installation
