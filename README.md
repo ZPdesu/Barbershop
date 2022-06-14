@@ -59,6 +59,17 @@ Produce results faithful to the masks:
 python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fidelity --smooth 5
 ```
 
+## Docker
+Now, Dockerfile is ready and you can use this code in docker too.
+
+### Build
+```
+docker build -t barbershop .
+```
+### Run
+```
+docker run --name barbershop --gpus all --rm -it -v <absolute_local_path>:/workspace/ barbershop  --im_path1 90.png --im_path2 117.png --im_path3 15.png --sign fidelity --smooth 5
+```
 
 
 ## Todo List
