@@ -64,6 +64,12 @@ Produce results faithful to the masks:
 python main.py --im_path1 90.png --im_path2 15.png --im_path3 117.png --sign fidelity --smooth 5
 ```
 
+### Using dockerized version
+Edit the HostPath and COMMAND in `Makefile`
+```
+make build
+make run
+```
 
 
 ## Todo List
