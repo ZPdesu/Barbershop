@@ -137,3 +137,5 @@ wandb/
 .idea
 cache
 pretrained_models/seg.pth
+.venv
+venv
