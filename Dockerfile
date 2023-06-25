@@ -11,31 +11,12 @@ ENV TZ=America/New_York
 # Install CUDA runtime components
 RUN apt-get update && apt-get install -y --no-install-recommends \
     cuda-runtime-11-0 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install required dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set the CUDA_HOME environment variable
-ENV CUDA_HOME="/usr/local/cuda"
-
-RUN apt-get install -f
-RUN apt-get --fix-broken install
-
-# # Install NVIDIA System Management Interface (nvidia-smi)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    cuda git cmake build-essential libboost-all-dev\
+    cuda git cmake build-essential libboost-all-dev \
     python3-pyqt5 \
-    && rm -rf /var/lib/apt/lists/*
-
-# # Install Python and required packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/*
+    python3-pip
 
 # Set the CUDA_HOME environment variable
 ENV CUDA_HOME="/usr/local/cuda"
